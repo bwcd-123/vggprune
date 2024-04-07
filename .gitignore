@@ -1,4 +1,5 @@
 main.sh
+vggprune.sh
 dataset.py
 __pycache__
 weights
