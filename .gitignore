@@ -1,2 +1,4 @@
 main.sh
 dataset.py
+__pycache__
+weights
