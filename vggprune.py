@@ -11,6 +11,8 @@ from torchvision import datasets, transforms
 from models import vgg
 import thop
 
+print("\nbegin to prune.\n")
+
 # Prune settings
 parser = argparse.ArgumentParser(description='PyTorch Slimming CIFAR prune')
 parser.add_argument('--dataset', type=str, default='cifar10',
