@@ -1,8 +1,8 @@
 #!/bin/bash
 #JSUB -q AI205009
 #JSUB -gpgpu 1
-#JSUB -e error/test.%J
-#JSUB -o output/test.%J
+#JSUB -e error/main.%J
+#JSUB -o output/main.%J
 source /apps/software/anaconda3/etc/profile.d/conda.sh
 module load cuda/11.6
 conda activate torch39
