@@ -12,6 +12,9 @@ from torchvision import datasets, transforms
 # class Variable is no longer used
 # from torch.autograd import Variable
 
+import swanlab
+import time
+
 from models import vgg
 
 # Training settings
@@ -51,6 +54,13 @@ parser.add_argument('--depth', default=11, type=int,
 
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
+
+logger = swanlab.init(
+    experiment_name="vggprune",
+    description="learn how to prune vgg models",
+    config=args,
+    logdir='logs'
+)
 
 torch.manual_seed(args.seed)
 if args.cuda:
@@ -137,6 +147,8 @@ def train(epoch):
             print('Train Epoch: {} [{}/{} ({:.1f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                        100. * batch_idx / len(train_loader), loss.item()))
+            
+    logger.log({"loss":loss.item()})
 
 
 def test():
@@ -159,6 +171,7 @@ def test():
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         float(100.) * float(correct) / float(len(test_loader.dataset))))
+    logger.log({"test_loss":test_loss, "test_accuracy":float(correct)/float(len(test_loader.dataset))})
     return float(correct) / float(len(test_loader.dataset))
 
 
@@ -171,6 +184,8 @@ def save_checkpoint(state, is_best, filepath):
 
 best_prec1 = 0.0
 for epoch in range(args.start_epoch, args.epochs):
+    start_time = time.perf_counter()
+    
     if epoch in [args.epochs * 0.5, args.epochs * 0.75]:
         for param_group in optimizer.param_groups:
             param_group['lr'] *= 0.1
@@ -185,3 +200,7 @@ for epoch in range(args.start_epoch, args.epochs):
         'optimizer': optimizer.state_dict(),
         'cfg': model.cfg
     }, is_best, filepath=args.save)
+
+    # output elapsed time per epoch
+    end_time = time.perf_counter()
+    print('Time elapsed: {:.2f}s'.format(end_time - start_time))
