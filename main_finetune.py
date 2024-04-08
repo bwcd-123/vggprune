@@ -3,6 +3,7 @@ import argparse
 import numpy as np
 import os
 import shutil
+import time
 
 import torch
 import torch.nn as nn
@@ -171,6 +172,8 @@ def save_checkpoint(state, is_best, filepath):
 
 best_prec1 = 0.
 for epoch in range(args.start_epoch, args.epochs):
+    start_time = time.perf_counter()
+
     train(epoch)
     prec1 = test()
     is_best = prec1 > best_prec1
@@ -182,3 +185,6 @@ for epoch in range(args.start_epoch, args.epochs):
         'optimizer': optimizer.state_dict(),
         'cfg': model.cfg
     }, is_best, filepath=args.save)
+
+    end_time = time.perf_counter()
+    print('Time elapsed: {:.2f}s\n\n'.format(end_time - start_time))

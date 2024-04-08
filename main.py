@@ -192,4 +192,4 @@ for epoch in range(args.start_epoch, args.epochs):
 
     # output elapsed time per epoch
     end_time = time.perf_counter()
-    print('Time elapsed: {:.2f}s'.format(end_time - start_time))
+    print('Time elapsed: {:.2f}s\n\n'.format(end_time - start_time))
