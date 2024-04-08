@@ -16,6 +16,8 @@ import time
 
 from models import vgg
 
+print("begin to pre-train.")
+
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Slimming CIFAR training')
 parser.add_argument('--dataset', type=str, default='cifar10',
