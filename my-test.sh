@@ -8,3 +8,4 @@ module load cuda/11.6
 conda activate torch39
 python main.py  --dir_data ../../datasets/CIFAR10  --batch-size 100  --epochs 2  --save weights/pretrain
 python vggprune.py  --dir_data ../../datasets/CIFAR10  --model weights/pretrain/checkpoint_VGG16bn_l1_norm.pth.tar  --save weights/prune
+Add swanlab to record training logs. Also show the time elapsed per epoch.
