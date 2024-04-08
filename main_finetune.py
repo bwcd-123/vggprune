@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
-from torch.autograd import Variable
+# from torch.autograd import Variable
 
 from models import vgg
 
@@ -129,7 +129,7 @@ def train(epoch):
     for batch_idx, (data, target) in enumerate(train_loader):
         if args.cuda:
             data, target = data.cuda(), target.cuda()
-        data, target = Variable(data), Variable(target)
+        # data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
         output = model(data)
         loss = F.cross_entropy(output, target)
@@ -150,7 +150,7 @@ def test():
     for data, target in test_loader:
         if args.cuda:
             data, target = data.cuda(), target.cuda()
-        data, target = Variable(data, volatile=True), Variable(target)
+        # data, target = Variable(data, volatile=True), Variable(target)
         output = model(data)
         # parameter "size_average" is no longer used. If False, delete directly; If True, use "reduction='mean'" to replace it.
         # test_loss += F.cross_entropy(output, target, size_average=False).item() # sum up batch loss
