@@ -6,4 +6,4 @@
 source /apps/software/anaconda3/etc/profile.d/conda.sh
 module load cuda/11.6
 conda activate torch39
-python main.py  --dir_data ../datasets/CIFAR10  --batch-size 1000  --test-batch-size 1000  --log-interval 10  --save weights/pretrain
+python main.py  --dir_data ../datasets/CIFAR10  --batch-size 1000  --test-batch-size 1000  --resume weights/resume/model_best.pth.tar  --log-interval 10  --save weights/pretrain
