@@ -155,3 +155,4 @@ num_parameters = sum([param.nelement() for param in newmodel.parameters()])
 with open(os.path.join(args.save, "prune.txt"), "w") as fp:
     fp.write("Number of parameters: \n" + str(num_parameters) + "\n")
 
+print("\nmodel prune over.\n")
