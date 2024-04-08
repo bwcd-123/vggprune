@@ -4,7 +4,8 @@ import os
 
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
+# no longer use Variable
+# from torch.autograd import Variable
 from torchvision import datasets, transforms
 
 from models import vgg
@@ -52,7 +53,8 @@ def test(model):
     for data, target in test_loader:
         if args.cuda:
             data, target = data.cuda(), target.cuda()
-        data, target = Variable(data, volatile=True), Variable(target)
+        # no longer use class Variable
+        # data, target = Variable(data, volatile=True), Variable(target)
         output = model(data)
         pred = output.data.max(1, keepdim=True)[1]  # get the index of the max log-probability
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
@@ -63,16 +65,16 @@ def test(model):
 
 # 加载剪枝前VGG11的Baseline
 model = vgg.vgg(dataset=args.dataset, depth=args.depth)
-print("=> loading checkpoint '{}'".format(???))
-checkpoint = torch.load(???)
+print("=> loading checkpoint '{}'".format(args.baseline))
+checkpoint = torch.load(args.baseline)
 model.load_state_dict(checkpoint['state_dict'], strict=False)
 
 if args.cuda:
     model.cuda()
 # 测试剪枝前模型精度
-acc = ???
+acc = test(model)
 # 初始化一个数据输入模型，计算剪枝前模型的参数量与计算量
-x = ???
+x = torch.randn(1, 3, 32, 32).cuda() if args.cuda else torch.randn(1, 3, 32, 32)
 flops, params = thop.profile(model, inputs=(x,))
 print("before prune:")
 print("params:", params)
@@ -82,18 +84,18 @@ print("FLOPs:", flops)
 # 加载剪枝后微调前的模型
 cfg = [64, 'M', 128, 'M', 256, 256, 'M', 256, 256, 'M', 256, 256]
 newmodel_pruned = vgg.vgg(dataset=args.dataset, depth=args.depth, cfg=cfg)
-print("=> loading checkpoint '{}'".format(???))
-checkpoint = torch.load(???)
+print("=> loading checkpoint '{}'".format(args.pruned))
+checkpoint = torch.load(args.pruned)
 newmodel_pruned.load_state_dict(checkpoint['state_dict'], strict=False)
 
 if args.cuda:
     newmodel_pruned.cuda()
 
 # 测试剪枝后微调前的模型精度
-acc = ???
+acc = test(newmodel_pruned)
 
 # 同样初始化一个数据输入模型，计算剪枝后微调前模型的参数量与计算量
-x = ???
+x = torch.randn(1, 3, 32, 32).cuda() if args.cuda else torch.randn(1, 3, 32, 32)
 flops, params = thop.profile(newmodel_pruned, inputs=(x,))
 print("after prune, before finetune:")
 print("params:", params)
@@ -103,18 +105,18 @@ print("FLOPs:", flops)
 # 加载微调后的模型
 cfg = [64, 'M', 128, 'M', 256, 256, 'M', 256, 256, 'M', 256, 256]
 newmodel_finetune = vgg.vgg(dataset=args.dataset, depth=args.depth, cfg=cfg)
-print("=> loading checkpoint '{}'".format(???))
-checkpoint = torch.load(???)
+print("=> loading checkpoint '{}'".format(args.finetune))
+checkpoint = torch.load(args.finetune)
 newmodel_finetune.load_state_dict(checkpoint['state_dict'], strict=False)
 
 if args.cuda:
     newmodel_finetune.cuda()
 
 # 测试微调后模型精度
-acc = ???
+acc = test(newmodel_finetune)
 
 # 同样初始化一个数据输入模型，计算微调后模型的参数量与计算量
-x = ???
+x = torch.randn(1, 3, 32, 32).cuda() if args.cuda else torch.randn(1, 3, 32, 32)
 flops, params = thop.profile(newmodel_finetune, inputs=(x,))
 print("after finetune:")
 print("params:", params)
