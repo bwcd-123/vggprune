@@ -74,9 +74,9 @@ jsub < test.sh
 
 ## 相关链接
 
-1. [基于L1范数的滤波器剪枝PRUNING]: https://blog.csdn.net/w584212179/article/details/79802499	"prune"
-
-2. [VGG网络详解]: https://blog.csdn.net/DreamBro/article/details/121068023	"VGG"
+1. <a href="https://blog.csdn.net/w584212179/article/details/79802499">基于L1范数的滤波器剪枝PRUNING</a>
+   
+2. <a href="https://blog.csdn.net/DreamBro/article/details/121068023">VGG网络详解</a>
 
 
 
